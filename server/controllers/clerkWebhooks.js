@@ -15,10 +15,10 @@ const clerkWebhooks = async (req, res) => {
         };
 
         //verifying Headers
-        await whook.verify(JSON.stringify(req.body), headers)
+        await whook.verify(req.body, headers)
 
         //geting Data from request body
-        const { data, type } = req.body
+        const { data, type } = JSON.parse(req.body.toString())
 
         const userData = {
             _id: data.id,
