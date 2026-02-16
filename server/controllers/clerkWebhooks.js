@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import User from "../models/userModel.js";
 import { Webhook } from "svix";
 
 const clerkWebhooks = async (req, res) => {
@@ -15,10 +15,10 @@ const clerkWebhooks = async (req, res) => {
         };
 
         //verifying Headers
-        await whook.verify(req.body, headers)
+        await whook.verify(req.body.toString('utf8'), headers)
 
         //geting Data from request body
-        const { data, type } = JSON.parse(req.body.toString())
+        const { data, type } = JSON.parse(req.body.toString('utf8'))
 
         const userData = {
             _id: data.id,

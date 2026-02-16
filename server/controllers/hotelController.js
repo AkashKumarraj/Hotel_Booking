@@ -1,6 +1,6 @@
 import Hotel from "../models/Hotel.js";
 
-import user from "../models/User.js";
+import user from "../models/userModel.js";
 
 export const registerHotel = async (req, res) => {
     try {
