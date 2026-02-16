@@ -16,6 +16,10 @@ connectCloudinary();
 
 const app = express()
 
+
+//Api to Listen to clerk webhooks
+app.use("/api/clerk", clerkWebhooks);
+
 //Middleware
 app.use(express.json())  //all the request passed with json method
 app.use(clerkMiddleware())
@@ -28,8 +32,6 @@ app.use(
 );
 
 
-//Api to Listen to clerk webhooks
-app.use("/api/clerk", clerkWebhooks);
 
 app.get('/', (req, res) => res.send("API is working"))
 app.use('/api/user', userRouter)
