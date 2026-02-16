@@ -18,7 +18,7 @@ const app = express()
 
 
 //Api to Listen to clerk webhooks
-app.use("/api/clerk", clerkWebhooks);
+app.post("/api/clerk", express.raw({ type: 'application/json' }), clerkWebhooks);
 
 //Middleware
 app.use(express.json())  //all the request passed with json method
