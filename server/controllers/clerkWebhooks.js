@@ -30,28 +30,29 @@ const clerkWebhooks = async (req, res) => {
         //switch cases for different Events
         switch (type) {
             case "user.created": {
+                console.log("Creating user:", userData);
                 await User.create(userData);
                 break;
             }
             case "user.updated": {
+                console.log("Updating user:", userData);
                 await User.findByIdAndUpdate(data.id, userData);
                 break;
             }
             case "user.deleted": {
+                console.log("Deleting user:", data.id);
                 await User.findByIdAndDelete(data.id);
                 break;
             }
             default:
+                console.log("Unhandled event type:", type);
                 break;
         }
         res.json({ success: true, message: "Webhook Received" })
 
-
-
     } catch (error) {
-        console.log(error.message)
-        res.json({ success: false, message: error.message })
-
+        console.error("Webhook Error:", error.message);
+        res.status(500).json({ success: false, message: error.message })
     }
 }
 export default clerkWebhooks
