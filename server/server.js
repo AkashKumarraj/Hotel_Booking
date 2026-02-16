@@ -22,7 +22,8 @@ app.use(clerkMiddleware())
 
 app.use(
     cors({
-        origin: "http://localhost:5173"
+        origin: "*", // Allow all origins for now to ensure webhook/frontend access
+        credentials: true
     })
 );
 
@@ -48,4 +49,8 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 
 
-app.listen(PORT, () => console.log(`Server running port ${PORT}`));
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => console.log(`Server running port ${PORT}`));
+}
+
+export default app;
