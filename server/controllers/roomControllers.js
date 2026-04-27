@@ -2,6 +2,7 @@ import Hotel from "../models/Hotel.js";
 import { v2 as cloudinary } from "cloudinary";
 import Room from "../models/Room.js";
 import user from "../models/userModel.js";
+
 //Api to create a new room for a hotel
 export const createRoom = async (req, res) => {
     try {
@@ -43,7 +44,7 @@ export const getRoom = async (req, res) => {
                 path: 'owner',
                 select: 'image'
             }
-        }).sort({ createAt: -1 })
+        }).sort({ createdAt: -1 })
         res.json({ success: true, rooms });
     } catch (error) {
         res.json({ success: false, message: error.message });
@@ -53,7 +54,7 @@ export const getRoom = async (req, res) => {
 //api to get all rooms for a specific hotel
 export const getOwnerRooms = async (req, res) => {
     try {
-        const hotelData = await Hotel({ owner: req.auth.userId })
+        const hotelData = await Hotel.findOne({ owner: req.auth.userId })
         const rooms = await Room.find({ hotel: hotelData._id.toString() }).populate("hotel");
         res.json({ success: true, rooms });
     } catch (error) {
