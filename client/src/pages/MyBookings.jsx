@@ -1,9 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Title from '../components/Title'
-import { assets, userBookingsDummyData } from '../assets/assets'
+import { assets } from '../assets/assets'
+import { useAppContext } from '../context/AppContext'
+import toast from 'react-hot-toast'
 const MyBookings = () => {
 
-    const [bookings, setBookings] = useState(userBookingsDummyData)
+    const { axios, getToken, user } = useAppContext()
+    const [bookings, setBookings] = useState([])
+
+    const fetchUserBookings = async () => {
+        try {
+            const { data } = await axios.get('/api/bookings/user', {
+                headers: {
+                    Authorization: `Bearer ${await getToken()}`
+                }
+            })
+            if (data.success) {
+                setBookings(data.bookings)
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+
+    useEffect(() => {
+        if (user) {
+            fetchUserBookings()
+        }
+    }, [user])
+
     return (
         <div className='py-28 md:pb-35 md:pt-32 px-4 md:px-16 lg:px-24 xl:px-32'>
 
@@ -63,7 +90,7 @@ const MyBookings = () => {
                                     {booking.isPaid ? "Paid" : "unpaid"}
                                 </p>
                             </div>
-                            {!booking.isPaid &&(
+                            {!booking.isPaid && (
                                 <button className='px-4 py-1.5 mt-4 text-xs border border-gray-400
                                 rounded-full hover:bg-gray-50 transition-all cursor-pointer'>
                                     Pay Now

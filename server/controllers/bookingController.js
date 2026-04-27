@@ -9,7 +9,7 @@ const checkAvailability = async ({ checkInDate, checkOutDate, room }) => {
         const bookings = await Booking.find({
             room,
             checkInDate: { $lte: checkOutDate },
-            checkOutDate: { $lte: checkInDate },
+            checkOutDate: { $gte: checkInDate },
         });
         const isAvailable = bookings.length === 0;
         return isAvailable;
@@ -37,7 +37,7 @@ export const checkAvailabilityAPI = async (req, res) => {
 
 export const createBooking = async (req, res) => {
     try {
-        const { room, checkInDate, checkOutDate } = req.body;
+        const { room, checkInDate, checkOutDate, guests } = req.body;
         const user = req.user._id;
 
         //Before Booking Check Availability
