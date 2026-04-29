@@ -2,7 +2,7 @@ import transporter from "../configs/nodemailer.js";
 import Booking from "../models/Booking.js"
 import Hotel from "../models/Hotel.js";
 import Room from "../models/Room.js";
-import stripe from "stripe";
+import Stripe from "stripe";
 
 
 //Funtion to check Availability of Room
@@ -142,7 +142,7 @@ export const stripePayment = async (req, res) => {
         const totalPrice = booking.totalPrice;
         const { origin } = req.headers;
 
-        const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
+        const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
 
         const line_items = [
             {
@@ -170,9 +170,8 @@ export const stripePayment = async (req, res) => {
         res.json({ success: true, url: session.url })
 
     } catch (error) {
-        // console.log(error);  // Add this to see the actual error
-        // res.json({ success: false, message: error.message });  // Show actual error instead of generic message
-        res.json({ success: false, message: "Payment Failed" })
+        console.log("Stripe Payment Error:", error);
+        res.json({ success: false, message: error.message })
 
     }
 }
