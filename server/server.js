@@ -21,9 +21,9 @@ const app = express()
 //Api to Listen to clerk webhooks
 app.post("/api/clerk", express.raw({ type: 'application/json' }), clerkWebhooks);
 
-//Middleware
-app.use(express.json())  //all the request passed with json method
-app.use(clerkMiddleware())
+
+
+
 
 app.use(
     cors({
@@ -33,7 +33,12 @@ app.use(
 );
 
 //api to listen to stripe Webhooks
-app.post('/api/stripe', express.raw({ type: " application/json" }), stripeWebhooks);
+app.post('/api/stripe', express.raw({ type: "application/json" }), stripeWebhooks);
+
+//Middleware
+app.use(express.json())  //all the request passed with json method
+app.use(clerkMiddleware())
+
 
 
 
