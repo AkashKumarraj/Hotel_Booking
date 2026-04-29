@@ -12,23 +12,23 @@ export const stripeWebhooks = async (request, response) => {
     try {
         event = stripeInstance.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET)
     } catch (err) {
-        console.log('Webhook signature verification failed:', err.message);
+
         return response.status(400).send(`Webhook Error: ${err.message}`)
     }
 
-    console.log('Webhook event received:', event.type);
-
     //Handle the event
-    if (event.type === "checkout.session.completed") {
-        const session = event.data.object;
-        const { bookingId } = session.metadata;
+    if (event.type === "payment_intent.succeeded") {
+        const paymentIntent = event.data.object;
+        const paymentIntentId = paymentIntent.id;
 
-        console.log('Processing payment for bookingId:', bookingId);
+        //getting session metadata
+        const session = await stripeInstance.checkout.sessions.list({
+            payment_intent: paymentIntentId,
+        })
 
+        const { bookingId } = session.data[0].metadata;
         //Mark Payment as Paid
         await Booking.findByIdAndUpdate(bookingId, { isPaid: true, paymentMethod: "Stripe" })
-
-        console.log('Payment status updated successfully for booking:', bookingId);
 
     } else {
         console.log("Unhandled event type:", event.type)
